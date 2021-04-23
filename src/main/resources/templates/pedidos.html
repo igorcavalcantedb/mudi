@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/temp :: head">
+
+</head>
+<body>
+	<div th:replace="fragments/temp :: menu('Meus Pedidos')"></div>
+	<div class="container">
+
+		<div th:if="${pedidos == null}" >Bem vindo, <span th:text="${username}"></span></div>
+		<div class="mb-3 card" th:each="pedido : ${pedidos}">
+		<div th:text="${pedido.status}"></div>
+			<th:block th:switch="${pedido.status}">
+			<div th:case="ENTREGUE" th:text=${pedido.nome}></div>
+				<div th:case="'AGUARDANDO'" class="card-header alert alert-warning" th:text=${pedido.nome}>NOME DO PRODUTO</div>
+				<div th:case="'APROVADO'" class="card-header alert alert-sucess" th:text=${pedido.nome}>NOME DO PRODUTO</div>
+				<div th:case="ENTREGUE" class="card-header alert alert-dark" th:text=${pedido.nome}>NOME DO PRODUTO</div>
+			</th:block>
+		
+
+
+			<div class="card-body">
+				<div class="row">
+					<div class="col-12 col-sm-8">
+						<div class="row">
+
+							<div class="col-md-7">
+								Valor: <span th:text=${pedido.valor}></span>
+							</div>
+							<div class="col-md-5">
+								Data da entrega: <span th:text=${pedido.dataEntrega}></span>
+							</div>
+						</div>
+						<div>Url Produto:</div>
+						<div>
+							<input class="form-control" th:value=${pedido.url}
+								value="url do produto" />
+						</div>
+						<div>
+							<textarea class="form-control" th:text=${pedido.descricao}>Descrição do Prduto</textarea>
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-4">
+						<img class="img-thumbnail" th:src=${pedido.urlImagem} src="" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div th:replace="fragments/temp :: footer"></div>
+</body>
+</html>
