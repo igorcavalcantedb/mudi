@@ -32,9 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// .httpBasic()
 				// .and()
 				
-				.formLogin().loginPage("/login").defaultSuccessUrl("/", true).permitAll().and()
+				.formLogin().loginPage("/login").defaultSuccessUrl("/pedido/pedidos", true).permitAll().and()
 
-				.logout().logoutUrl("/logout").logoutSuccessUrl("/login").permitAll();
+				.logout().logoutUrl("/logout").logoutSuccessUrl("/").permitAll();
 	}
 	
 

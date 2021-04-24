@@ -33,7 +33,7 @@ public class LoginController {
 		
 		model.addAttribute("username", nome);
 		model.addAttribute("pedidos", pedidos);
-		return "pedidos";
+		return "home";
 	}
 	@ExceptionHandler(IllegalArgumentException.class)
 	public String onError() {

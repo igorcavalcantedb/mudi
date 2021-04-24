@@ -4,16 +4,12 @@
 
 </head>
 <body>
-		<div th:replace="fragments/temp ::logo"></div>
-	<div sec:authorize="!isAuthenticated()">
-		<div th:replace="fragments/temp :: menu('Pedidos')"></div>
-	</div>
 
+	<div th:replace="fragments/temp ::logo"></div>
 	<div sec:authorize="isAuthenticated()">
-		<div th:replace="fragments/temp :: menu('Meus Pedidos')"></div>
+		<div
+			th:replace="fragments/temp :: menu('Últimos Pedidos dos Clientes')"></div>
 	</div>
-
-
 	<div class="container">
 
 		<div th:if="${pedidos == null}">
@@ -50,7 +46,6 @@
 							<input class="form-control" th:value=${pedido.url}
 								value="url do produto" />
 						</div>
-						<div>Descrição</div>
 						<div>
 							<textarea class="form-control" th:text=${pedido.descricao}>Descrição do Prduto</textarea>
 						</div>

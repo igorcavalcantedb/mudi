@@ -49,6 +49,7 @@ public class PedidoController {
 		
 		List<Pedido> pedidos = pedidoService.getByUser(obterUserNameLogado());
 		model.addAttribute("pedidos", pedidos);
+		model.addAttribute("status", "pedidos");
 		return "pedidos";
 	}
 	
