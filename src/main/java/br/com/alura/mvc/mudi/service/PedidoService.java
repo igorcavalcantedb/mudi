@@ -3,8 +3,8 @@ package br.com.alura.mvc.mudi.service;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,7 +30,6 @@ public class PedidoService {
 	}
 
 	public List<Pedido> getByUser(String userName) {
-		
 
 		return pedidoRepository.findByUser(getUserByUserName(userName));
 
@@ -46,31 +45,33 @@ public class PedidoService {
 		return pedidoRepository.findByStatus(StatusPedido.valueOf(status.toUpperCase()));
 
 	}
-	public List<Pedido> getPorStatusPaginadoEOrgdenado(String status) {
+
+	public Page<Pedido> getPorStatusPaginadoEOrgdenado(String status, int currentPage, int pageSize) {
 		Sort sort = Sort.by("dataEntrega").ascending();
-		PageRequest paginacao = PageRequest.of(0, 10,sort);
+		PageRequest paginacao = PageRequest.of(currentPage - 1, pageSize, sort);
 
-		return pedidoRepository.findByStatus(StatusPedido.valueOf(status.toUpperCase()),paginacao);
+		return pedidoRepository.findByStatus(StatusPedido.valueOf(status.toUpperCase()), paginacao);
+
+	}
+
+	public List<Pedido> getPorUserAndStatus(String userName, String status) {
+
+		return pedidoRepository.findByUserAndStatus(getUserByUserName(userName),
+				StatusPedido.valueOf(status.toUpperCase()));
 
 	}
 
-	public List<Pedido> getPorUserAndStatus(String userName , String status) {
-
-		return pedidoRepository.findByUserAndStatus(getUserByUserName(userName) , StatusPedido.valueOf(status.toUpperCase()));
-
-	}
-	
 	private User getUserByUserName(String userName) {
 		Optional<User> user = userRepository.findById(userName);
 		return user.get();
-		
+
 	}
 
 	private User getUserLogado() {
 		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<User> user = userRepository.findById(userName);
 		return user.get();
-		
+
 	}
 //	public List<Pedido> getAgurdando() {
 //		

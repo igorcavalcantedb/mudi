@@ -3,6 +3,7 @@ package br.com.alura.mvc.mudi.repository;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -21,6 +22,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 	List<Pedido> findByUserAndStatus(User user, StatusPedido status);
 	
 	@Cacheable("todosPedidos")
-	List<Pedido> findByStatus(StatusPedido valueOf, Pageable paginacao);
+	Page<Pedido> findByStatus(StatusPedido status, Pageable paginacao);
 
 }

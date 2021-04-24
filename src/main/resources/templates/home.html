@@ -26,9 +26,6 @@
 				<div th:case="ENTREGUE" class="card-header alert alert-dark"
 					th:text=${pedido.nome}>NOME DO PRODUTO</div>
 			</th:block>
-
-
-
 			<div class="card-body">
 				<div class="row">
 					<div class="col-12 col-sm-8">
@@ -56,10 +53,20 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
+		<nav>
+			<ul class="pagination justify-content-center">
+
+				<li th:if="${pedidos.totalPages > 0}"
+					th:each="pageNumber : ${pageNumbers}" class="page-item"
+					th:classappend=" ${pageNumber==pedidos.number + 1} ? 'disabled' ">
+					<a th:href="@{/(size=${pedidos.size}, page=${pageNumber})}"
+					th:text=${pageNumber} th:class="page-link "></a>
+				</li>
+			</ul>
+		</nav>
 	</div>
-
-
 	<div th:replace="fragments/temp :: footer"></div>
 </body>
 </html>
