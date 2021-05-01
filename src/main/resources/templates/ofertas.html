@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head th:replace="fragments/temp :: head">
+
+</head>
+<body onload="onLoad()">
+	<div th:replace="fragments/temp ::logo"></div>
+	<div sec:authorize="!isAuthenticated()">
+		<div th:replace="fragments/temp :: menu('Pedidos')"></div>
+	</div>
+
+	<div sec:authorize="isAuthenticated()">
+		<div th:replace="fragments/temp :: menu('Ofertas')"></div>
+	</div>
+
+
+	<div class="container" id="ofertasApp">
+
+
+		<div class="mb-3 card" v-for="oferta in ofertas">
+			<div class="alert-dark card-header">{{oferta.nome}}</div>
+
+
+
+
+			<div class="card-body">
+				<div class="row">
+					<div class="col-12 col-sm-8">
+						<div class="row">
+
+							<div class="col-md-5">
+								Valor: <input v-model="oferta.valor" v-bind:class="{'form-control is-invalid' :oferta.erros.valor !== '' }"/>
+								<div class="alert alert-danger" v-if="oferta.erros.valor" >{{oferta.erros.valor}}</div>
+							</div>
+							<div class="col-md-7">
+								Data da entrega: <input v-model="oferta.dataEntrega" v-bind:class="{'form-control is-invalid' :oferta.erros.dataEntrega !== '' }"/>
+								<div class="alert alert-danger" v-if="oferta.erros.dataEntrega" >{{oferta.erros.dataEntrega}}</div>
+							</div>
+						</div>
+						<div>Url Produto:</div>
+						<div>
+							<a v-bind:href="oferta.url">{{oferta.nome}}</a>
+						</div>
+						<div>Descrição</div>
+						<div>
+							<textarea disabled class="form-control">{{oferta.descricao}}</textarea>
+						</div>
+					</div>
+
+					<div class="col-12 col-sm-4">
+						<img class="img-thumbnail" v-bind:src="oferta.urlImagem" />
+					</div>
+					<div>
+					<button v-if="oferta.ofertaEnviada" class="btn btn-success mt-3">Oferta Enviada</button>
+					<button v-else v-on:click="enviarOferta(oferta)" class="btn btn-primary  mt-3">Cadastrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div th:replace="fragments/temp :: footer"></div>
+
+	<script type="text/javascript">
+	function onLoad(){
+	
+		var app = new Vue({
+		  el: '#ofertasApp',
+		  data: {
+		    ofertas: []
+		  },
+		  mounted () {
+			    axios
+			      .get('http://localhost:8080/api/pedidos/aguardando')
+			      .then(
+					      response => {
+					    	  response.data.content.forEach(oferta =>
+					    	   {
+						    	  oferta.ofertaEnviada = false;
+						    	  oferta.erros = { valor:"",dataEntrega:""}
+					    	  })
+						      this.ofertas = response.data.content 
+						      }
+					    )
+			       },
+			       methods:{
+			    	   enviarOferta: function (oferta) {
+				    	   
+			    		   oferta.erros = { valor:"",dataEntrega:""}
+			    		   axios
+						      .post('http://localhost:8080/api/oferta',{
+						    	 pedidoId:oferta.id,
+						    		valor:oferta.valor,
+						    		dataEntrega: oferta.dataEntrega
+							      
+							      })
+						      .then(response => {oferta.ofertaEnviada = true })
+			    		      .catch(error =>{
+				    		     error.response.data.errors.forEach(erro => {
+					    		     oferta.erros[erro.field]= erro.defaultMessage;
+					    		    console.log("oferta.erros.valor= "+ oferta.erros.valor + " erro.defaultMessage="+erro.defaultMessage+" erro.field="+erro.field)
+				    		     })
+				    		      
+				    		      })
+			    		    }
+				       }
+			       })
+		}
+
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+</html>

@@ -34,6 +34,7 @@ public class PedidoService {
 		return pedidoRepository.findByUser(getUserByUserName(userName));
 
 	}
+	
 
 	public Pedido salvarPedido(Pedido pedido) {
 		pedido.setUser(getUserLogado());
@@ -73,6 +74,12 @@ public class PedidoService {
 		return user.get();
 
 	}
+	
+	public Optional<Pedido> obterPorID(Long id) {
+		return pedidoRepository.findById(id);
+	}
+	
+
 //	public List<Pedido> getAgurdando() {
 //		
 //		return pedidoRepository.findByStatus(StatusPedido.AGUARDANDO);
